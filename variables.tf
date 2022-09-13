@@ -28,8 +28,3 @@ variable "instance_type" {
   description = "Specifies the AWS instance type."
   default     = "t3.micro"
 }
-
-variable "num_instances" {
-  description = "Specifies the number of instances to deploy."
-  default     = 3
-}

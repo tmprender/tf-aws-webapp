@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.region
+  region = var.region
 }
 
 resource "aws_vpc" "hashiapp" {
@@ -20,7 +20,7 @@ resource "aws_vpc" "hashiapp" {
   enable_dns_hostnames = true
 
   tags = {
-    name = "${var.prefix}-vpc-${var.region}"
+    name        = "${var.prefix}-vpc-${var.region}"
     environment = "Production"
   }
 }
@@ -108,7 +108,6 @@ data "hcp_packer_image" "ubuntu" {
 }
 
 resource "aws_instance" "hashiapp" {
-  count                       = var.num_instances
   ami                         = data.hcp_packer_image.ubuntu.cloud_image_id
   instance_type               = var.instance_type
   associate_public_ip_address = true
