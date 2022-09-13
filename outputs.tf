@@ -4,5 +4,5 @@ output "app_url" {
 }
 
 output "ami_id" {
-  value = aws_instance.hashiapp.ami
+  value = aws_instance.hashiapp[0].ami
 }
