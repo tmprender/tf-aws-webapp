@@ -21,7 +21,7 @@ resource "aws_vpc" "hashiapp" {
 
   tags = {
     name        = "${var.prefix}-vpc-${var.region}"
-    environment = "Production"
+    environment = var.env
   }
 }
 
@@ -96,12 +96,12 @@ resource "aws_route_table_association" "hashiapp" {
 }
 
 data "hcp_packer_iteration" "ubuntu" {
-  bucket_name = "ubuntu-focal-webserver"
-  channel     = "production"
+  bucket_name = var.packer_bucket
+  channel     = var.packer_channel
 }
 
 data "hcp_packer_image" "ubuntu" {
-  bucket_name    = "ubuntu-focal-webserver"
+  bucket_name    = var.packer_bucket
   cloud_provider = "aws"
   iteration_id   = data.hcp_packer_iteration.ubuntu.ulid
   region         = var.region
