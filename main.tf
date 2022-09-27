@@ -13,6 +13,12 @@ terraform {
 
 provider "aws" {
   region = var.region
+
+  default_tags {
+    tags {
+      environment = var.env
+    }
+  }
 }
 
 resource "aws_vpc" "hashiapp" {
@@ -21,7 +27,6 @@ resource "aws_vpc" "hashiapp" {
 
   tags = {
     name        = "${var.prefix}-vpc-${var.region}"
-    environment = var.env
   }
 }
 
