@@ -124,3 +124,13 @@ resource "aws_instance" "hashiapp" {
     Name = "${var.prefix}-hashiapp-instance"
   }
 }
+
+resource "aws_eip" "hashiapp" {
+  instance = aws_instance.hashiapp.id
+  vpc      = true
+}
+
+resource "aws_eip_association" "hashiapp" {
+  instance_id   = aws_instance.hashiapp.id
+  allocation_id = aws_eip.hashiapp.id
+}
