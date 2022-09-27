@@ -26,7 +26,7 @@ resource "aws_vpc" "hashiapp" {
   enable_dns_hostnames = true
 
   tags = {
-    name        = "${var.prefix}-vpc-${var.region}"
+    Name        = "${var.prefix}-vpc-${var.region}"
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_subnet" "hashiapp" {
   cidr_block = var.subnet_prefix
 
   tags = {
-    name = "${var.prefix}-subnet"
+    Name = "${var.prefix}-subnet"
   }
 }
 
