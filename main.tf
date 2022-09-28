@@ -126,11 +126,13 @@ resource "aws_instance" "hashiapp" {
 }
 
 resource "aws_eip" "hashiapp" {
+  count = var.assign_eip ? 1 : 0
   instance = aws_instance.hashiapp.id
   vpc      = true
 }
 
 resource "aws_eip_association" "hashiapp" {
+  count = var.assign_eip ? 1 : 0
   instance_id   = aws_instance.hashiapp.id
-  allocation_id = aws_eip.hashiapp.id
+  allocation_id = aws_eip.hashiapp[0].id
 }
