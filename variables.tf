@@ -1,10 +1,3 @@
-##############################################################################
-# Variables File
-#
-# Here is where we store the default values for all the variables used in our
-# Terraform code. If you create a variable with no default, the user will be
-# prompted to enter it (or define it via config file or command line flags.)
-
 variable "prefix" {
   type        = string
   description = "This prefix will be included in the name of most resources."
@@ -51,8 +44,47 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
-variable "assign_eip" {
-  type        = bool
-  description = "Whether to assign a static Elastic IP address"
-  default     = false
+variable "hashi_products" {
+  type = list(object({
+    name       = string
+    color      = string
+    image_file = string
+  }))
+  default = [
+    {
+      name       = "Consul"
+      color      = "#dc477d"
+      image_file = "hashicafe_art_consul.png"
+    },
+    {
+      name       = "HCP"
+      color      = "#ffffff"
+      image_file = "hashicafe_art_hcp.png"
+    },
+    {
+      name       = "Nomad"
+      color      = "#60dea9"
+      image_file = "hashicafe_art_nomad.png"
+    },
+    {
+      name       = "Packer"
+      color      = "#63d0ff"
+      image_file = "hashicafe_art_packer.png"
+    },
+    {
+      name       = "Terraform"
+      color      = "#844fba"
+      image_file = "hashicafe_art_terraform.png"
+    },
+    {
+      name       = "Vagrant"
+      color      = "#2e71e5"
+      image_file = "hashicafe_art_vagrant.png"
+    },
+    {
+      name       = "Vault"
+      color      = "#ffec6e"
+      image_file = "hashicafe_art_vault.png"
+    }
+  ]
 }
