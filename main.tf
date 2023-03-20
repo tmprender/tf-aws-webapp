@@ -89,27 +89,6 @@ resource "aws_security_group" "hashicafe" {
 
   vpc_id = aws_vpc.hashicafe.id
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   egress {
     from_port       = 0
     to_port         = 0
@@ -121,6 +100,17 @@ resource "aws_security_group" "hashicafe" {
   tags = {
     Name = "${var.prefix}-security-group"
   }
+}
+
+resource "aws_security_group_rule" "ingress" {
+  for_each          = toset(["22", "80", "443"])
+  security_group_id = aws_security_group.hashicafe.id
+  type              = "ingress"
+  description       = "Inbound port ${each.value}"
+  from_port         = each.value
+  to_port           = each.value
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_internet_gateway" "hashicafe" {
