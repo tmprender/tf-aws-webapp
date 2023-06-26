@@ -1,16 +1,18 @@
 terraform {
+  required_version = ">= 1.2"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.0"
+      version = "~> 5.0"
     }
     hcp = {
       source  = "hashicorp/hcp"
-      version = "~> 0.46.0"
+      version = "~> 0.62"
     }
     null = {
       source  = "hashicorp/null"
-      version = "~> 3.1"
+      version = "~> 3.2"
     }
     random = {
       source  = "hashicorp/random"
@@ -156,7 +158,7 @@ resource "aws_instance" "hashicafe" {
 
     postcondition {
       condition     = self.ami == data.hcp_packer_image.ubuntu-webserver.cloud_image_id
-      error_message = "A newer source AMI is available in the HCP Packer channel, please re-deploy."
+      error_message = "A new source AMI is available in the HCP Packer channel, please re-deploy."
     }
 
     postcondition {
@@ -167,8 +169,7 @@ resource "aws_instance" "hashicafe" {
 }
 
 resource "aws_eip" "hashicafe" {
-  instance = aws_instance.hashicafe.id
-  vpc      = true
+  domain = "vpc"
 }
 
 resource "aws_eip_association" "hashicafe" {
