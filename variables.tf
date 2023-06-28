@@ -14,16 +14,16 @@ variable "env" {
   description = "Value for the environment tag."
 }
 
-variable "packer_bucket" {
+variable "department" {
+  description = "Value for the department tag."
   type        = string
-  description = "HCP Packer bucket name containing the source image."
-  default     = "ubuntu20-nginx"
+  default     = "WebDev"
 }
 
-variable "packer_channel" {
+variable "owner" {
+  description = "Value for the owner tag."
   type        = string
-  description = "HCP Packer image channel."
-  default     = "production"
+  default     = "web.developer"
 }
 
 variable "address_space" {
@@ -42,6 +42,18 @@ variable "instance_type" {
   type        = string
   description = "Specifies the AWS instance type."
   default     = "t3.micro"
+}
+
+variable "packer_bucket" {
+  type        = string
+  description = "HCP Packer bucket name containing the source image."
+  default     = "ubuntu22-nginx"
+}
+
+variable "packer_channel" {
+  type        = string
+  description = "HCP Packer image channel."
+  default     = "production"
 }
 
 variable "hashi_products" {
