@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.2"
+  required_version = ">= 1.5"
 
   required_providers {
     aws = {
@@ -154,11 +154,6 @@ resource "aws_instance" "hashicafe" {
     precondition {
       condition     = data.hcp_packer_image.ubuntu-webserver.region == var.region
       error_message = "The selected image must be in the same region as the deployed resources."
-    }
-
-    postcondition {
-      condition     = self.ami == data.hcp_packer_image.ubuntu-webserver.cloud_image_id
-      error_message = "A new source AMI is available in the HCP Packer channel, please re-deploy."
     }
 
     postcondition {
