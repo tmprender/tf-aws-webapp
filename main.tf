@@ -38,16 +38,9 @@ provider "aws" {
   }
 }
 
-locals {
-  timestamp = timestamp()
-}
-
 resource "random_integer" "product" {
   min = 0
   max = length(var.hashi_products) - 1
-  keepers = {
-    "timestamp" = local.timestamp
-  }
 }
 
 data "hcp_packer_image" "ubuntu-webserver" {
@@ -172,10 +165,6 @@ resource "aws_eip_association" "hashicafe" {
 
 resource "null_resource" "configure-web-app" {
   depends_on = [aws_eip_association.hashicafe]
-
-  triggers = {
-    build_number = local.timestamp
-  }
 
   connection {
     type        = "ssh"
