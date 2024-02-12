@@ -8,7 +8,7 @@ terraform {
     }
     hcp = {
       source  = "hashicorp/hcp"
-      version = "~> 0.62"
+      version = "~> 0.82"
     }
     null = {
       source  = "hashicorp/null"
@@ -43,11 +43,11 @@ resource "random_integer" "product" {
   max = length(var.hashi_products) - 1
 }
 
-data "hcp_packer_image" "ubuntu-webserver" {
-  bucket_name    = var.packer_bucket
-  channel        = var.packer_channel
-  cloud_provider = "aws"
-  region         = var.region
+data "hcp_packer_artifact" "ubuntu-webserver" {
+  bucket_name  = var.packer_bucket
+  channel_name = var.packer_channel
+  platform     = "aws"
+  region       = var.region
 }
 
 resource "aws_vpc" "hashicafe" {
@@ -127,7 +127,7 @@ resource "aws_route_table_association" "hashicafe" {
 }
 
 resource "aws_instance" "hashicafe" {
-  ami                         = data.hcp_packer_image.ubuntu-webserver.cloud_image_id
+  ami                         = data.hcp_packer_artifact.ubuntu-webserver.external_identifier
   instance_type               = var.instance_type
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.hashicafe.id
@@ -140,7 +140,7 @@ resource "aws_instance" "hashicafe" {
 
   lifecycle {
     precondition {
-      condition     = data.hcp_packer_image.ubuntu-webserver.region == var.region
+      condition     = data.hcp_packer_artifact.ubuntu-webserver.region == var.region
       error_message = "The selected image must be in the same region as the deployed resources."
     }
 
