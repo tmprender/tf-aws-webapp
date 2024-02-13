@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.2"
+  required_version = ">= 1.5"
 
   required_providers {
     aws = {
@@ -8,7 +8,7 @@ terraform {
     }
     hcp = {
       source  = "hashicorp/hcp"
-      version = "~> 0.62"
+      version = "~> 0.82"
     }
     null = {
       source  = "hashicorp/null"
@@ -38,28 +38,16 @@ provider "aws" {
   }
 }
 
-locals {
-  timestamp = timestamp()
-}
-
 resource "random_integer" "product" {
   min = 0
   max = length(var.hashi_products) - 1
-  keepers = {
-    "timestamp" = local.timestamp
-  }
 }
 
-data "hcp_packer_iteration" "ubuntu-webserver" {
-  bucket_name = var.packer_bucket
-  channel     = var.packer_channel
-}
-
-data "hcp_packer_image" "ubuntu-webserver" {
-  bucket_name    = var.packer_bucket
-  cloud_provider = "aws"
-  iteration_id   = data.hcp_packer_iteration.ubuntu-webserver.ulid
-  region         = var.region
+data "hcp_packer_artifact" "ubuntu-webserver" {
+  bucket_name  = var.packer_bucket
+  channel_name = var.packer_channel
+  platform     = "aws"
+  region       = var.region
 }
 
 resource "aws_vpc" "hashicafe" {
@@ -139,7 +127,7 @@ resource "aws_route_table_association" "hashicafe" {
 }
 
 resource "aws_instance" "hashicafe" {
-  ami                         = data.hcp_packer_image.ubuntu-webserver.cloud_image_id
+  ami                         = data.hcp_packer_artifact.ubuntu-webserver.external_identifier
   instance_type               = var.instance_type
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.hashicafe.id
@@ -152,13 +140,8 @@ resource "aws_instance" "hashicafe" {
 
   lifecycle {
     precondition {
-      condition     = data.hcp_packer_image.ubuntu-webserver.region == var.region
+      condition     = data.hcp_packer_artifact.ubuntu-webserver.region == var.region
       error_message = "The selected image must be in the same region as the deployed resources."
-    }
-
-    postcondition {
-      condition     = self.ami == data.hcp_packer_image.ubuntu-webserver.cloud_image_id
-      error_message = "A new source AMI is available in the HCP Packer channel, please re-deploy."
     }
 
     postcondition {
@@ -182,10 +165,6 @@ resource "aws_eip_association" "hashicafe" {
 
 resource "null_resource" "configure-web-app" {
   depends_on = [aws_eip_association.hashicafe]
-
-  triggers = {
-    build_number = local.timestamp
-  }
 
   connection {
     type        = "ssh"
