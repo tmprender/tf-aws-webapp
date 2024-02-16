@@ -148,7 +148,7 @@ resource "aws_instance" "hashicafe" {
 #      error_message = "EC2 instance must be in a VPC that has public DNS hostnames enabled."
 #    }
 #  }
-#}
+}
 
 resource "aws_eip" "hashicafe" {
   domain = "vpc"
