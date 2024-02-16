@@ -137,18 +137,18 @@ resource "aws_instance" "hashicafe" {
     Name = "${var.prefix}-hashicafe-instance"
   }
 
-  lifecycle {
-    precondition {
-      condition     = data.hcp_packer_artifact.ubuntu-webserver.region == var.region
-      error_message = "The selected image must be in the same region as the deployed resources."
-    }
-
-    postcondition {
-      condition     = self.public_dns != ""
-      error_message = "EC2 instance must be in a VPC that has public DNS hostnames enabled."
-    }
-  }
-}
+#  lifecycle {
+#    precondition {
+#      condition     = data.hcp_packer_artifact.ubuntu-webserver.region == var.region
+#      error_message = "The selected image must be in the same region as the deployed resources."
+#    }
+#
+#    postcondition {
+#      condition     = self.public_dns != ""
+#      error_message = "EC2 instance must be in a VPC that has public DNS hostnames enabled."
+#    }
+#  }
+#}
 
 resource "aws_eip" "hashicafe" {
   domain = "vpc"
