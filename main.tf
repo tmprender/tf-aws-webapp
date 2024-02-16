@@ -42,12 +42,12 @@ resource "random_integer" "product" {
   max = length(var.hashi_products) - 1
 }
 
-data "hcp_packer_artifact" "ubuntu-webserver" {
-  bucket_name  = var.packer_bucket
-  channel_name = var.packer_channel
-  platform     = "aws"
-  region       = var.region
-}
+#data "hcp_packer_artifact" "ubuntu-webserver" {
+#  bucket_name  = var.packer_bucket
+#  channel_name = var.packer_channel
+#  platform     = "aws"
+#  region       = var.region
+#}
 
 resource "aws_vpc" "hashicafe" {
   cidr_block           = var.address_space
@@ -126,7 +126,7 @@ resource "aws_route_table_association" "hashicafe" {
 }
 
 resource "aws_instance" "hashicafe" {
-  ami                         = data.hcp_packer_artifact.ubuntu-webserver.external_identifier
+  ami                         = "ami-0b0ea68c435eb488d"
   instance_type               = var.instance_type
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.hashicafe.id
