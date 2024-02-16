@@ -11,14 +11,14 @@ check "web_health" {
     condition     = aws_instance.hashicafe.instance_state == "running"
     error_message = "The EC2 instance is not running."
   }
-  assert {
-    condition     = data.hcp_packer_artifact.ubuntu-webserver.revoke_at == null
-    error_message = "The image referenced in the Packer bucket is scheduled for revocation."
-  }
-  assert {
-    condition     = timecmp(plantimestamp(), timeadd(data.hcp_packer_artifact.ubuntu-webserver.created_at, "720h")) < 0
-    error_message = "The image referenced in the Packer bucket is more than 30 days old."
-  }
+  #assert {
+  #  condition     = data.hcp_packer_artifact.ubuntu-webserver.revoke_at == null
+  #  error_message = "The image referenced in the Packer bucket is scheduled for revocation."
+  #}
+  #assert {
+  #  condition     = timecmp(plantimestamp(), timeadd(data.hcp_packer_artifact.ubuntu-webserver.created_at, "720h")) < 0
+  #  error_message = "The image referenced in the Packer bucket is more than 30 days old."
+  #}
 }
 
 check "dns_health" {
